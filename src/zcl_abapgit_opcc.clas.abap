@@ -4,6 +4,8 @@ FINAL
 CREATE PUBLIC .
   PUBLIC SECTION.
     CLASS-METHODS get_file_name
+      IMPORTING
+        iv_logical_filename TYPE string
       RETURNING
         VALUE(rv_file_name) TYPE string .
   PROTECTED SECTION.
@@ -12,12 +14,12 @@ ENDCLASS.
 
 CLASS zcl_abapgit_opcc IMPLEMENTATION.
   METHOD get_file_name.
-    DATA: lv_file_name TYPE string.
+
     CALL FUNCTION 'FILE_GET_NAME'
       EXPORTING
-        logical_filename = 'ZEX_LOG_FILE_NAME'
+        logical_filename = iv_logical_filename
       IMPORTING
-        file_name        = lv_file_name
+        file_name        = rv_file_name
       EXCEPTIONS
         file_not_found   = 1
         OTHERS           = 2.
@@ -25,6 +27,6 @@ CLASS zcl_abapgit_opcc IMPLEMENTATION.
       MESSAGE 'Invalid logical file name!' TYPE 'I'.
       RETURN.
     ENDIF.
-    rv_file_name = lv_file_name.
+
   ENDMETHOD.
 ENDCLASS.
